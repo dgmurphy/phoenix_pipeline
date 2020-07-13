@@ -84,6 +84,10 @@ def parse_config(config_filename):
         dupfile_stem = parser.get('Pipeline', 'dupfile_stem')
         outputfile_stem = parser.get('Pipeline', 'outputfile_stem')
         oneaday_filter = parser.get('Pipeline', 'oneaday_filter')
+
+        # DGM
+        run_date = parser.get('Pipeline', 'run_date')
+
         if 'Auth' in parser.sections():
             auth_db = parser.get('Auth', 'auth_db')
             auth_user = parser.get('Auth', 'auth_user')
@@ -132,7 +136,11 @@ def parse_config(config_filename):
 
 
 
-        return server_list, geo_list, file_list, petrarch_version
+        # return server_list, geo_list, file_list, petrarch_version
+        # DGM
+        return server_list, geo_list, file_list, petrarch_version, run_date
+
+
     except Exception as e:
         print('Problem parsing config file. {}'.format(e))
 

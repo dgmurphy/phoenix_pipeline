@@ -14,8 +14,8 @@ import result_formatter
 import scraper_connection
 
 
-def main(file_details, geo_details, server_details, petrarch_version, mongo_details, logger_file=None, run_filter=None,
-         run_date='', version=''):
+def main(file_details, geo_details, server_details, petrarch_version, run_date, mongo_details, logger_file=None, run_filter=None,
+         version=''):
     """
     Main function to run all the things.
 
@@ -158,8 +158,8 @@ def main(file_details, geo_details, server_details, petrarch_version, mongo_deta
 
 
 def run():
-    server_details, geo_details, file_details, petrarch_version = utilities.parse_config('PHOX_config.ini')
-    main(file_details, geo_details, server_details, petrarch_version, file_details.log_file,
+    server_details, geo_details, file_details, petrarch_version, run_date = utilities.parse_config('PHOX_config.ini')
+    main(file_details, geo_details, server_details, petrarch_version, run_date, file_details.log_file,
          run_filter=file_details.oneaday_filter, version='v0.0.0')
 
 if __name__ == '__main__':
