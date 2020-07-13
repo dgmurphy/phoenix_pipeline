@@ -59,9 +59,7 @@ def create_strings(events, version):
         if 'geosentence' in events[event]:
             geosentence = events[event]['geosentence']
             #geosentence = events[event]['geosentence'].encode('utf-8').strip()
-            #geosentence = geosentence.replace("\t", "")
-            #print(geosentence)
-
+    
 
         actor_info = '\t'.join(actors)
         print('Event: {}\t{}\t{}\t{}\t{}'.format(story_date, actor_info, code,
@@ -87,7 +85,10 @@ def create_strings(events, version):
 
         event_str += '\t{}\t{}\t{}'.format(ids, urls, sources)
 
-        event_str += '\t{}'.format(geosentence.decode('utf-8')) 
+        # DGM
+        geosentence_utf8 = geosentence.encode('utf-8', 'replace')
+        geosentence_clean = geosentence.replace('\t', " ").strip()
+        event_str += '\t{}'.format(geosentence_clean) 
         
         event_output.append(event_str + '\n')
 
