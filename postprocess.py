@@ -54,6 +54,15 @@ def create_strings(events, version):
         else:
             lon, lat, name = '', '', ''
 
+        # DGM
+        geosentence = ''
+        if 'geosentence' in events[event]:
+            geosentence = events[event]['geosentence']
+            #geosentence = events[event]['geosentence'].encode('utf-8').strip()
+            #geosentence = geosentence.replace("\t", "")
+            #print(geosentence)
+
+
         actor_info = '\t'.join(actors)
         print('Event: {}\t{}\t{}\t{}\t{}'.format(story_date, actor_info, code,
                                                  ids, sources))
@@ -77,11 +86,15 @@ def create_strings(events, version):
             event_str += '\t\t\t\t\t'
 
         event_str += '\t{}\t{}\t{}'.format(ids, urls, sources)
-        event_output.append(event_str)
+
+        event_str += '\t{}'.format(geosentence.decode('utf-8')) 
+        
+        event_output.append(event_str + '\n')
 
         id_count += 1
 
-    event_strings = '\n'.join(event_output)
+    #event_strings = '\n'.join(event_output)
+    event_strings = event_output
 
     with open('counter.txt', 'w') as f:
         f.write(str(id_count))
@@ -394,6 +407,8 @@ def main(event_dict, this_date, version, file_details, server_details, geo_detai
         updated_events = geolocation.cliff(event_dict, file_details, server_details, geo_details)
     elif geo_details.geo_service == "Mordecai":
         updated_events = geolocation.mordecai(event_dict, file_details, server_details, geo_details)
+    elif geo_details.geo_service == "print_sentence":
+        updated_events = geolocation.print_sentence(event_dict, file_details, server_details, geo_details)
     else:
         print("Invalid geo service name. Must be 'CLIFF' or 'Mordecai'.")
 
@@ -401,8 +416,9 @@ def main(event_dict, this_date, version, file_details, server_details, geo_detai
     event_write = create_strings(updated_events, version)
 
     logger.info('Writing event output.')
-    filename = '{}{}.txt'.format(file_details.fullfile_stem, this_date)
+    filename = '{}{}.csv'.format(file_details.fullfile_stem, this_date)
     with io.open(filename, 'w', encoding='utf-8') as f:
-        f.write(event_write)
+        #f.write(event_write)
+        f.writelines(event_write)
 
     print("Finished")

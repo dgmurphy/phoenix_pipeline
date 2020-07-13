@@ -355,3 +355,35 @@ def cliff(events, file_details, server_details, geo_details):
                                     geo_info['countryCode'])
             # Add in country and restype here
     return events
+
+
+# DGM
+def print_sentence(events, file_details, server_details, geo_details):
+    """
+    Returns the sentence instead of calling a geo service
+    Parameters
+    ----------
+     events: Dictionary.
+                Contains filtered events from the one-a-day filter. Keys are
+                (DATE, SOURCE, TARGET, EVENT) tuples, values are lists of
+                IDs, sources, and issues.
+    Returns
+    -------
+    events: Dictionary.
+                Same as in the parameter but with the addition of a value that is
+                a list of lon, lat, placeName, stateName, countryCode.
+    """
+    coll = utilities.make_conn(file_details.db_db, file_details.db_collection,
+                                file_details.auth_db, file_details.auth_user,
+                                file_details.auth_pass)
+
+    for event in events:
+        event_id, sentence_id = events[event]['ids'][0].split('_')
+    # print(event_id)
+        result = coll.find_one({'_id': ObjectId(event_id.split('_')[0])})
+        sents = utilities.sentence_segmenter(result['content'])
+
+        events[event]['geosentence'] = sents[int(sentence_id)]
+        events[event]['geo'] = ("$TBD", "$TBD", "$TBD", "$TBD", "$TBD")
+
+    return events
