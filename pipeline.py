@@ -114,8 +114,15 @@ def main(file_details, geo_details, server_details, petrarch_version, run_date, 
         #        petrarch.run_pipeline(formatted,
         #                              '{}{}.txt'.format(file_details.fullfile_stem,
         #                                                date_string), parsed=True)
+
+        
         petr_results = petrarch.run_pipeline(formatted, config = "petr_config.ini", write_output=False,
+        
+        # DGM TEst
+        # petrarch.run_pipeline(formatted, out_file = "TESTOUT.txt", config = "petr_config.ini", write_output=True,
                                              parsed=True)
+        #sys.exit()
+
     elif run_filter == 'True':
         print('Running PETRARCH and returning output.')
         logger.info('Running PETRARCH and returning output.')
@@ -144,23 +151,25 @@ def main(file_details, geo_details, server_details, petrarch_version, run_date, 
     else:
         print("Please specify a data version number. Program ending.")
 
-    logger.info("Running phox_uploader.py")
-    print("Running phox_uploader.py")
-    try:
-        uploader.main(date_string, server_details, file_details)
-    except Exception as e:
-        logger.warning("Error on the upload portion. {}".format(e))
-        print("""Error on the uploader. This step isn't absolutely necessary.
-              Valid events should still be generated.""")
+    #logger.info("Running phox_uploader.py")
+    # print("Running phox_uploader.py")
+    # try:
+    #     uploader.main(date_string, server_details, file_details)
+    # except Exception as e:
+    #     logger.warning("Error on the upload portion. {}".format(e))
+    #     print("""Error on the uploader. This step isn't absolutely necessary.
+    #           Valid events should still be generated.""")
 
     logger.info('PHOX.pipeline end')
     print('PHOX.pipeline end:', datetime.datetime.utcnow())
 
 
 def run():
-    server_details, geo_details, file_details, petrarch_version, run_date = utilities.parse_config('PHOX_config.ini')
-    main(file_details, geo_details, server_details, petrarch_version, run_date, file_details.log_file,
-         run_filter=file_details.oneaday_filter, version='v0.0.0')
+    #server_details, geo_details, file_details, petrarch_version, run_date = utilities.parse_config('PHOX_config.ini')
+    cfg = utilities.parse_config('PHOX_config.ini')
+    main(cfg['file_list'], cfg['geo_list'], cfg['server_list'], 
+         cfg['petrarch_version'], cfg['run_date'], cfg['file_list'].log_file,
+         run_filter=cfg['file_list'].oneaday_filter, version='v0.0.0')
 
 if __name__ == '__main__':
     run()

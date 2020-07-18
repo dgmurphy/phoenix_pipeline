@@ -292,7 +292,13 @@ def story_filter(story_dict, story_id):
                 list is optional.
     """
     filtered = defaultdict(dict)
-    story_date = story_dict['meta']['date']
+    
+    # DGM in null actor mode it seems a date can be missing
+    if 'date' in story_dict['meta']:
+        story_date = story_dict['meta']['date']
+    else:
+        story_date = "00000000"
+    
     for sent in story_dict['sents']:
         sent_dict = story_dict['sents'][sent]
         sent_id = '{}_{}'.format(story_id, sent)

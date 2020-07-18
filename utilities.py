@@ -138,7 +138,14 @@ def parse_config(config_filename):
 
         # return server_list, geo_list, file_list, petrarch_version
         # DGM
-        return server_list, geo_list, file_list, petrarch_version, run_date
+        cfg = {
+            'server_list': server_list,
+            'geo_list': geo_list,
+            'file_list': file_list,
+            'petrarch_version': petrarch_version,
+            'run_date': run_date
+        }
+        return cfg
 
 
     except Exception as e:
