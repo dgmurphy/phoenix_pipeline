@@ -82,6 +82,8 @@ def main(file_details, geo_details, server_details, petrarch_version, run_date, 
                                                   process_date.day)
         logger.info('Date string: {}'.format(date_string))
         print('Date string:', date_string)
+
+    # Get the stories for the desired date from the DB
     results, scraperfilename = scraper_connection.main(process_date,
                                                        file_details)
     if geo_details.geo_service == "Mordecai":
