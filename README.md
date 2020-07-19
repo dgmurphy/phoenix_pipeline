@@ -1,64 +1,60 @@
-phoenix_pipeline
-================
+# Phoenix Pipeline
 
-[![Build Status](https://travis-ci.org/openeventdata/phoenix_pipeline.svg?branch=master)](https://travis-ci.org/openeventdata/phoenix_pipeline)
-[![Join the chat at https://gitter.im/openeventdata/phoenix_pipeline](https://badges.gitter.im/openeventdata/phoenix_pipeline.svg)](https://gitter.im/openeventdata/phoenix_pipeline?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+A fork of the OEDA Phoenix Pipeline. See the original repo for more detailed information:
 
-Turning news into events since 2014.
+https://github.com/openeventdata/phoenix_pipeline
 
+and
 
-This system links a series of Python programs to convert the files which have been 
-downloaded by a [web scraper](https://github.com/openeventdata/scraper) to
-coded event data which is uploaded to a web site designated in the config file.
-The system processes a single day of information, but this can be derived from
-multiple text files. The pipeline also implements a filter for source URLs as
-defined by the keys in the `source_keys.txt` file. These keys correspond to the
-`source` field in the MongoDB instance.
+https://phoenix-pipeline.readthedocs.io/en/latest/
 
-For more information please visit the [documentation](http://phoenix-pipeline.readthedocs.org/en/latest/).
+The Phoenix Pipeline takes the sentence content and the parse trees and produces events using the Petrarch event coder. Petrach includes a number of data dictionaries including the CAMEO event codes, Actor, Agent and Issues dictionaries, and a Discards list. 
+
+Read more about Petrarch here:
+
+https://petrarch.readthedocs.io/
 
 
-## Requirements
-
-The pipeline requires either
-[Petrarch](https://github.com/openeventdata/petrarch) or
-[Petrarch2](https://github.com/openeventdata/petrarch2) to be installed. Both
-are Python programs and can be installed from Github using pip.
-
-The pipeline assumes that stories are stored in a MongoDB in a particular
-format. This format is the one used by the OEDA news RSS scraper. See [the
-code](https://github.com/openeventdata/scraper/blob/master/mongo_connection.py)
-for details on it structures stories in the Mongo. Using this pipeline with
-differently formatted databases will require changing field names throughout
-the code. The pipeline also requires that stories have been parsed with
-Stanford CoreNLP. See the [simple and
-stable](https://github.com/openeventdata/stanford_pipeline) way to do this, or
-the [experimental distributed](https://github.com/oudalab/biryani) approach.
-
-The pipeline requires one of two geocoding systems to be running: CLIFF-CLAVIN
-or Mordecai. For CLIFF, see a VM version
-[here](https://github.com/ahalterman/CLIFF-up) or a Docker container version
-[here](https://github.com/openeventdata/cliff_container). For Mordecai, see the
-setup instructions [here](https://github.com/openeventdata/mordecai). The
-version of the pipeline deployed in production currently uses CLIFF/CLAVIN, but
-future development will focus on improvements to Mordecai.
-
-## Configuration
-
-The pipeline has two configuration files. `PHOX_config.ini` specifies which
-geolocation system to use, how to name the files produced by the pipeline, and
-how to upload the files to a remote server if desired.
-
-`petr_config.ini` is the configuration file for Petrarch2 itself, including the
-location of dictionaries, new actor extraction options, and the one-a-day filter. For
-more details see the main [Petrarch2 repo](https://github.com/openeventdata/petrarch2/).
-
-## Running
-
-To run the program:
-
-```
-python pipeline.py
-```
+Note: this version of the pipeline has Geocoding disabled. Events will not be location coded but the source sentence will be saved with each event so a seperate process can be used to perform sentence-level geocoding.
 
 
+## Prerequisites
+Requires text content and parse trees to be populated in MongoDB.
+
+## Install
+
+### Clone the Repo
+
+
+```git clone https://github.com/dgmurphy/phoenix_pipeline.git```
+
+### Create Python Environment & Install libraries
+
+In the phoenix_pipeline directory perform the usual steps to create & activate the virtual environment, then pip install -r requirements.txt.
+
+
+### Edit the Config File
+
+The pipeline will process events on a per-day basis by checking the date fields of the stories in MongoDB.
+To process events for a particular day we need to specify that day in the config file.
+
+
+In the file `PHOX_config.ini` :
+
+`run_date = 20200713`
+
+NOTE: To process events on the same day they were collected, set the run_date to today's date plus one day.
+
+### Do a Test Run of the Pipeline
+
+```python pipeline.py```
+
+
+The pipeline should produce a csv file e.g.:
+
+`events.full.20200713.csv`
+
+Open this file in LibreOffice to view it.  For the seperator options use:
+
+* Seperated by: Tab only
+* String delimeter: '   (single quote)
