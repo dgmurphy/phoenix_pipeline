@@ -30,7 +30,21 @@ Requires text content and parse trees to be populated in MongoDB.
 
 ### Create Python Environment & Install libraries
 
-In the phoenix_pipeline directory perform the usual steps to create & activate the virtual environment, then pip install -r requirements.txt.
+In the phoenix_pipeline directory create a Python2 virtual environment:
+
+`virtualenv -p /usr/bin/python2.7 venv`
+
+Activate the virtual environment:
+
+`source venv/bin/activate`
+
+Install:
+
+`pip install -r requirements.txt`
+
+NOTE: Having installation problems? Try doing a no-cache install:
+
+`pip install -r requirements.txt --no-cache`
 
 
 ### Edit the Config File
@@ -43,7 +57,7 @@ In the file `PHOX_config.ini` :
 
 `run_date = 20200713`
 
-NOTE: To process events on the same day they were collected, set the run_date to today's date plus one day.
+NOTE: Check the MongoDB to make sure it contains storied with the date_added equal to the run_date specified above, otherwise no stories will be processed.
 
 ### Do a Test Run of the Pipeline
 
